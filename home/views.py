@@ -1,4 +1,4 @@
-from django.conf import settings
+from django.core import cache
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 from django.shortcuts import redirect, get_object_or_404
@@ -7,7 +7,7 @@ from wagtail.images import get_image_model
 from wagtail.images.models import SourceImageIOError
 from wagtail.images.utils import verify_signature
 
-from .backends import ImgProxyBackend
+from .backends import ImgProxyBackend, construct_cache_key
 
 
 class RemoteRenditionServeView(View):
@@ -32,4 +32,6 @@ class RemoteRenditionServeView(View):
 
         original_url = rendition.full_url
         remote_url = self.backend_class(original_url, filter_spec)()
+        cache_key = construct_cache_key(image, filter_spec, ImgProxyBackend)
+        cache.caches["renditions"].set(cache_key, remote_url)
         return redirect(remote_url)

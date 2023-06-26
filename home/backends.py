@@ -2,7 +2,13 @@ from django.conf import settings
 import imgproxy
 
 
+def construct_cache_key(image, filter_spec, backend):
+    return f"{backend.cache_key}-{image.id}-{filter_spec}"
+
+
 class BaseImageProcessingBackend:
+    cache_key = ""
+
     def __init__(self, source_url, filter_spec):
         self.source_url = source_url
         self.filter_spec = filter_spec
@@ -19,6 +25,7 @@ class BaseImageProcessingBackend:
 
 
 class ImgProxyBackend(BaseImageProcessingBackend):
+    cache_key = "imgproxy"
     operation_mappings = {
         "resize": "resizing_type",
         "width": "width",

@@ -174,3 +174,28 @@ WAGTAILADMIN_BASE_URL = "http://web:8000"
 IMGPROXY_HOST = os.getenv("IMGPROXY_HOST")
 IMGPROXY_KEY = os.getenv("IMGPROXY_KEY")
 IMGPROXY_SALT = os.getenv("IMGPROXY_SALT")
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+    },
+    "renditions": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "TIMEOUT": 600,
+        "OPTIONS": {"MAX_ENTRIES": 1000},
+    },
+}
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "DEBUG",
+    },
+}

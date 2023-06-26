@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% load wagtailimages_tags %}
+
+{% block content %}
+    {% for image_block in page.images %}
+	<img src="{% image_url image_block.value "resize-fit|height-600|width-800" "imgproxy_serve" %}" />
+    {% endfor %}
+{% endblock content %}

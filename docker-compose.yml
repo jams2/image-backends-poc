@@ -5,6 +5,10 @@ services:
       args:
         HOSTUID: ${HOSTUID}
       dockerfile: ./Dockerfile
+    env_file:
+      - .env
+    environment:
+      - PROXY_URL=${PROXY_URL}
     ports:
       - 8000:8000
     volumes:

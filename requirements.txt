@@ -1,3 +1,4 @@
 python-dotenv==1.0.0
 wagtail==5.0.2
 imgproxy==1.0.0
+imgix==4.0.0

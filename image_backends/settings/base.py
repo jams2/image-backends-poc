@@ -170,11 +170,6 @@ WAGTAILSEARCH_BACKENDS = {
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
 WAGTAILADMIN_BASE_URL = "http://web:8000"
 
-# imgproxy config
-IMGPROXY_HOST = os.getenv("IMGPROXY_HOST")
-IMGPROXY_KEY = os.getenv("IMGPROXY_KEY")
-IMGPROXY_SALT = os.getenv("IMGPROXY_SALT")
-
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
@@ -199,3 +194,14 @@ LOGGING = {
         "level": "DEBUG",
     },
 }
+
+# imgproxy config
+IMGPROXY_HOST = os.getenv("IMGPROXY_HOST")
+IMGPROXY_KEY = os.getenv("IMGPROXY_KEY")
+IMGPROXY_SALT = os.getenv("IMGPROXY_SALT")
+
+# imgix config
+IMGIX_SIGNATURE_KEY = os.getenv("IMGIX_SIGNATURE_KEY")
+IMGIX_DOMAIN = os.getenv("IMGIX_DOMAIN")
+
+PROXY_URL = os.getenv("PROXY_URL")

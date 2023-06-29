@@ -4,6 +4,14 @@
 
 {% block content %}
     {% for image_block in page.images %}
-	<img src="{% image_url image_block.value "resize-fit|height-600|width-800" "imgproxy_serve" %}" />
+	<div>
+	    <h2>imgproxy</h2>
+	    <img src="{% image_url image_block.value "resize-fit|height-600|width-800" "imgproxy_serve" %}" />
+	</div>
+
+	<div>
+	    <h2>imgix</h2>
+	    <img src="{% image_url image_block.value "resize-clamp|height-600|width-800" "imgix_serve" %}" />
+	</div>
     {% endfor %}
 {% endblock content %}

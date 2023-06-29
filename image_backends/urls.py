@@ -8,6 +8,7 @@ from wagtail.documents import urls as wagtaildocs_urls
 
 from search import views as search_views
 
+from home.backends import ImgProxyBackend, ImgixBackend
 from home.views import RemoteRenditionServeView
 
 urlpatterns = [
@@ -16,9 +17,14 @@ urlpatterns = [
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
     re_path(
-        r"^images/actions/process/(.*)/(\d*)/(.*)/[^/]*",
-        RemoteRenditionServeView.as_view(),
+        r"^imgproxy/(.*)/(\d*)/(.*)/[^/]*",
+        RemoteRenditionServeView.as_view(backend_class=ImgProxyBackend),
         name="imgproxy_serve",
+    ),
+    re_path(
+        r"^imgix/(.*)/(\d*)/(.*)/[^/]*",
+        RemoteRenditionServeView.as_view(backend_class=ImgixBackend),
+        name="imgix_serve",
     ),
 ]
 

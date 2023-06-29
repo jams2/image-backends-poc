@@ -1,4 +1,5 @@
 from django.conf import settings
+import imgix
 import imgproxy
 
 
@@ -28,11 +29,6 @@ class ImgProxyBackend(BaseImageProcessingBackend):
     cache_key = "imgproxy"
     operation_mappings = {
         "resize": "resizing_type",
-        "width": "width",
-        "height": "height",
-        "gravity": "gravity",
-        "enlarge": "enlarge",
-        "extension": "extension",
     }
 
     def get_url(self):
@@ -53,7 +49,32 @@ class ImgProxyBackend(BaseImageProcessingBackend):
             else:
                 try:
                     param, arg = directive.split("-")
-                    kwargs[self.operation_mappings[param]] = arg
-                except (ValueError, KeyError):
+                    kwargs[self.operation_mappings.get(param, param)] = arg
+                except ValueError:
                     kwargs["advanced"].append(directive)
+        return kwargs
+
+
+class ImgixBackend(BaseImageProcessingBackend):
+    operation_mappings = {
+        "height": "h",
+        "width": "w",
+        "resize": "fit",
+    }
+
+    def get_url(self):
+        builder = imgix.UrlBuilder(
+            settings.IMGIX_DOMAIN, sign_key=settings.IMGIX_SIGNATURE_KEY
+        )
+        return builder.create_url(self.source_url, self.kwargs)
+
+    def parse(self, filter_spec):
+        # Only width, height, and resize mode have been tested
+        kwargs = {}
+        for directive in filter_spec.split("|"):
+            if directive == "enlarge":
+                kwargs["enlarge"] = True
+            else:
+                param, arg = directive.split("-")
+                kwargs[self.operation_mappings.get(param, param)] = arg
         return kwargs

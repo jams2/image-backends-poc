@@ -8,7 +8,7 @@ services:
     env_file:
       - .env
     environment:
-      - PROXY_URL=${PROXY_URL}
+      - PROXY_URL_FOR_IMGIX=${PROXY_URL_FOR_IMGIX}
     ports:
       - 8000:8000
     volumes:
@@ -19,3 +19,7 @@ services:
       - 8080:8080
     env_file:
       - .env
+  thumbor:
+    image: minimalcompact/thumbor
+    ports:
+      - 8888:80

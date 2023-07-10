@@ -21,6 +21,10 @@ class BaseImageProcessingBackend:
     def get_url(self):
         raise NotImplementedError
 
+    @staticmethod
+    def get_original_rendition_url_prefix():
+        return ""
+
     def __call__(self):
         return self.get_url()
 
@@ -61,6 +65,10 @@ class ImgixBackend(BaseImageProcessingBackend):
         "width": "w",
         "resize": "fit",
     }
+
+    @staticmethod
+    def get_original_rendition_url_prefix():
+        return settings.PROXY_URL_FOR_IMGIX
 
     def get_url(self):
         builder = imgix.UrlBuilder(

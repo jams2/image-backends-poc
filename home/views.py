@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.core import cache
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
@@ -8,7 +7,7 @@ from wagtail.images import get_image_model
 from wagtail.images.models import SourceImageIOError
 from wagtail.images.utils import verify_signature
 
-from .backends import ImgProxyBackend, construct_cache_key
+from .backends import construct_cache_key
 
 
 class RemoteRenditionServeView(View):
@@ -34,8 +33,10 @@ class RemoteRenditionServeView(View):
                 "Source image file not found", content_type="text/plain", status=410
             )
 
-        original_url = f"{settings.PROXY_URL}{rendition.url}"
+        original_url = f"{self.backend_class.get_original_rendition_url_prefix()}{rendition.url}"
         remote_url = self.backend_class(original_url, filter_spec)()
-        cache_key = construct_cache_key(image, filter_spec, ImgProxyBackend)
+        cache_key = construct_cache_key(image, filter_spec, self.backend_class)
+
+        # Cached URL may accessed from home_tags.image_url, saving a request per-image
         cache.caches["renditions"].set(cache_key, remote_url)
         return redirect(remote_url)
